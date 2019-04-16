@@ -166,42 +166,46 @@ describe('WorkbookWriter', function() {
         });
     });
 
-		it.only('comments', function() {
-      var options = {
-        filename: TEST_XLSX_FILE_NAME,
-        useStyles: true
-      };
-      var wb = new Excel.stream.xlsx.WorkbookWriter(options);
-      var ws = wb.addWorksheet('Hello');
-
-			var cellA1 = ws.getCell('A1');
-			var cellB1 = ws.getCell('B1');
-
-			cellA1.comment = 'A1-comment'
-			cellB1.comment = 'B1-comment'
-
-			ws.commit()
-      return wb.commit()
-        .then(function() {
-          var wb2 = new Excel.Workbook();
-
-          return wb2.xlsx.readFile(TEST_XLSX_FILE_NAME);
-        })
-        .then(function(wb2) {
-          var ws2 = wb2.getWorksheet('Hello');
-					console.log('sdfsdf')
-
-					/*
-          expect(ws2.getCell('A1').comment).to.deep.equal({
-						value: 'A1-comment',
-						author: null
-					});
-          expect(ws2.getCell('B1').comment).to.equal({
-						value: 'A1-comment',
-						author: null
-					});
-					*/
-        });
+		describe('comments', function() {
+			it('handles cell comment objects', () => {
+      	var options = {
+	        filename: TEST_XLSX_FILE_NAME,
+	        useStyles: true
+	      };
+	      var wb = new Excel.stream.xlsx.WorkbookWriter(options);
+	      var ws = wb.addWorksheet('Hello');
+	
+				var cellA1 = ws.getCell('A1');
+				var cellB1 = ws.getCell('B1');
+	
+				cellA1.comment = { text: 'A1-comment' }
+				cellB1.comment = { text: 'B1-comment' }
+	
+				ws.commit()
+	      return wb.commit()
+	        .then(function() {
+	          var wb2 = new Excel.Workbook();
+	
+	          return wb2.xlsx.readFile(TEST_XLSX_FILE_NAME);
+	        })
+	        .then(function(wb2) {
+	          var ws2 = wb2.getWorksheet('Hello');
+						console.log(ws2)
+						console.log(ws2.getCell('A1'))
+						console.log(ws2.getCell('B1'))
+	
+						/*
+	          expect(ws2.getCell('A1').comment).to.deep.equal({
+							value: 'A1-comment',
+							author: null
+						});
+	          expect(ws2.getCell('B1').comment).to.equal({
+							value: 'A1-comment',
+							author: null
+						});
+						*/
+	        });
+			})
 		})
 
     it('rich text', function() {
